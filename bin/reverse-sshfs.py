@@ -76,10 +76,6 @@ local_path, remote_host, remote_path = sys.argv[1:]
 pserver = subprocess.Popen(["/usr/libexec/sftp-server"], cwd=local_path, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=sys.stderr)
 pclient = subprocess.Popen(["ssh", remote_host, "sshfs", ":", remote_path, "-o", "slave"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=sys.stderr)
 
-def read_string(io):
-    sl, = struct.unpack(">I", io)
-    return io.read(sl).decode("UTF-8")
-
 def is_acceptable_path(path: str):
     # TODO: replace with more better logic
     return (not path.startswith("/")) and (not path in "../") and (not path.endswith(".."))
