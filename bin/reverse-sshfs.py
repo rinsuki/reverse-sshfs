@@ -26,6 +26,7 @@ class SFTPCommand(enum.Enum):
     SSH_FXP_STAT = 17
     SSH_FXP_RENAME = 18
     SSH_FXP_READLINK = 19
+    SSH_FXP_SYMLINK = 20 # removed but some implementations still using this
     SSH_FXP_LINK = 21
     SSH_FXP_BLOCK = 22
     SSH_FXP_UNBLOCK = 23
@@ -42,6 +43,7 @@ class SFTPCommand(enum.Enum):
     def includes_file_path(self):
         if self in [
             self.SSH_FXP_RENAME,
+            self.SSH_FXP_SYMLINK,
             self.SSH_FXP_LINK,
         ]:
             return 2
