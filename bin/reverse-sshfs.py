@@ -78,7 +78,10 @@ pclient = subprocess.Popen(["ssh", remote_host, "sshfs", ":", remote_path, "-o",
 
 def is_acceptable_path(path: str):
     # TODO: replace with more better logic
-    return (not path.startswith("/")) and (not path in "../") and (not path.endswith(".."))
+    acceptable = not (path.startswith("/") or ("../" in path) or path.endswith(".."))
+    if not acceptable:
+        print("Denied", path)
+    return acceptable
 
 def filter_c2s():
     print("watching c2s...")
@@ -103,7 +106,6 @@ def filter_c2s():
                 path2_len = struct.unpack_from(">I", d2[0:4])[0]
                 path2 = d2[4:4+path2_len]
             if not should_accept:
-                print("Denied by me")
                 already_handled = True
                 msg = "Permission Denied".encode("UTF-8")
                 payload = struct.pack(">BIII", SFTPCommand.SSH_FXP_STATUS.value, pid, 2, len(msg)) + msg + struct.pack(">I", 0)
